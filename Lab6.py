@@ -17,7 +17,7 @@ def vigenere_sq():
         shifted = shifted[1:] + shifted[0]
         print(f"")
 
-vigenere_sq()
+#vigenere_sq()
 
 # Part 2 - Encryption
 
@@ -49,8 +49,48 @@ def encrypt_vigenere(key, plaintext, alphabet):
         ciphertext += vigenere_index(resized_key[i], plaintext[i], alphabet)
     return ciphertext
 
-plaintext = "THE EAGLE HAS LANDED"
-key = "DAVINCI"
-alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+# Part 3
 
-print(encrypt_vigenere(key, plaintext, alphabet))
+def undo_vigenere_index(key_letter, cipher_letter, alphabet):
+    if cipher_letter == " ":
+        return " "
+    key_index = letter_to_index(key_letter, alphabet)
+    cipher_index = letter_to_index(cipher_letter, alphabet)
+    return index_to_letter((cipher_index - key_index) % len(alphabet), alphabet)
+
+def decrypt_vigenere(key, cipher_text, alphabet):
+    key_len = len(key)
+    resized_key = ""
+    plaintext = ""
+    for i in range(len(cipher_text)):
+        resized_key += key[i % key_len]
+        plaintext += undo_vigenere_index(resized_key[i], cipher_text[i], alphabet)
+    return plaintext
+
+#plaintext = "THE EAGLE HAS LANDED"
+#key = "DAVINCI"
+#alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#encrypted = encrypt_vigenere(key, plaintext, alphabet)
+#decrypted = decrypt_vigenere(key, encrypted, alphabet)
+
+#print(f"Encrypted text: {encrypted}")
+#print(f"Decrypted text: {decrypted}")
+
+
+if input("Would you like to use a custom alphabet(Y/N)? ").upper() == "Y":
+    alphabet = input("Enter your custom alphabet: ").upper()
+else:
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+key = input("Enter your key: ").upper()
+while True:
+    choice = input("Would you like to (1)Encrypt text, (2)Decrypt text, (3)Quit? ")
+
+    match choice:
+        case "1":
+            plaintext = input("Enter your plaintext: ").upper()
+            print(f"Your encrypted text is: {encrypt_vigenere(key, plaintext, alphabet)}")
+        case "2":
+            ciphertext = input("Enter your ciphertext: ").upper()
+            print(f"Your decrypted text is: {decrypt_vigenere(key, ciphertext, alphabet)}")
+        case "3":
+            break
